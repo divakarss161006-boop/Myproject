@@ -1,4 +1,4 @@
-// studentsignup.js
+
 import { auth, db } from "./firebase/config.js";
 import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 import { setDoc, doc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
@@ -21,11 +21,11 @@ window.signup = async function () {
   }
 
   try {
-    // Create Authentication Account
+   
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
-    // Store Extra Student Data in Firestore
+    
     await setDoc(doc(db, "students", user.uid), {
       name,
       roll,
