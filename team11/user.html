@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIET - Smartpass</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
+
+    body {
+      display: flex;
+      min-height: 100vh;
+      flex-direction: row;
+      background-color: #fff;
+      overflow-y: auto;
+    }
+
+    .left {
+      flex: 1;
+      background-color: #004b23;
+      color: #f7f7a1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px;
+    }
+
+    .left h1 { font-size: 2rem; color: #ffee00; margin-bottom: 1rem; }
+    .left strong { color: #ffee00; }
+    .left ul { margin-top: 1rem; line-height: 1.8; }
+
+    .right {
+      flex: 1;
+      background-color: #f7df1e;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .role-card, .container {
+      background-color: white;
+      color: #333;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      padding: 30px;
+    }
+
+    .role-card img { width: 100px; height: auto; margin-bottom: 20px; }
+    .role-card h2 { color: #095221; margin-bottom: 25px; }
+
+    .btn {
+      display: block;
+      width: 100%;
+      background-color: #286749;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 12px;
+      margin: 10px 0;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn:hover { background-color: #169a72; }
+
+    footer {
+      margin-top: 30px;
+      font-size: 13px;
+      opacity: 0.8;
+      color: #333;
+    }
+
+    /* Common login form styling */
+    h2 { text-align: center; color: #0d9488; margin-bottom: 25px; }
+    label { display: block; margin-top: 10px; margin-bottom: 5px; font-weight: 600; color: #333; }
+    input {
+      width: 100%; padding: 10px; border: 1px solid #ccc;
+      border-radius: 8px; font-size: 15px;
+    }
+
+    button.login-btn {
+      width: 100%; margin-top: 20px; padding: 12px;
+      border: none; background-color: #0d9488; color: #fff;
+      border-radius: 10px; font-size: 16px; cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button.login-btn:hover { background-color: #0f766e; }
+
+    .bottom-text { text-align: center; margin-top: 15px; }
+    a { color: #0d9488; text-decoration: none; font-weight: 500; }
+    a:hover { text-decoration: underline; }
+
+    @media (max-width: 900px) {
+      body { flex-direction: column; }
+      .left, .right { width: 100%; height: auto; }
+      .left { padding: 40px; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- LEFT SIDE -->
+  <div class="left">
+    <h1>WELCOME TO SMART PASS</h1>
+    <p><strong>The Sri Shakthi Institute of Engineering and Technology Smartpass Digital Management System (Smartpass-DMS)</strong>
+      simplifies and digitalizes campus management processes.
+    </p>
+    <h4 style="margin-top: 20px;">SIET - Smartpass-DMS</h4>
+    <ul>
+      <li>Real-time data access for students, faculty, and administrators.</li>
+      <li>Digital leave and hostel management without paperwork.</li>
+      <li>Feedback and grievance handling system for better communication.</li>
+      <li>Modern, responsive interface for smooth navigation.</li>
+    </ul>
+  </div>
+
+  <!-- RIGHT SIDE -->
+  <div class="right">
+    <!-- MAIN -->
+    <div class="role-card" id="mainCard">
+      <img src="logo.png" alt="SIET Logo">
+      <h2>Welcome to Smartpass</h2>
+      <button class="btn" onclick="showRoles()">User</button>
+      <button class="btn" onclick="showLogin('adminLogin')">Admin</button>
+      <!-- <button class="btn" onclick="alert('Admin Login Coming Soon')">Admin</button> -->
+    </div>
+
+    <!-- ROLE SELECTION -->
+    <div class="role-card" id="roleCard" style="display:none;">
+      <img src="logo.png" alt="SIET Logo">
+      <h2>Select Your Role</h2>
+      <button class="btn" onclick="showLogin('studentLogin')">Student</button>
+      <button class="btn" onclick="showLogin('parentLogin')">Parent</button>
+      <button class="btn" onclick="showLogin('advisorLogin')">Advisor</button>
+      <button class="btn" onclick="showLogin('hodLogin')">HOD</button>
+      <button class="btn" onclick="showLogin('wardenLogin')">Warden</button>
+      <button class="btn" style="background:#6c757d;" onclick="backToMain()">← Back</button>
+    </div>
+
+    <!-- STUDENT LOGIN -->
+    <div class="container" id="studentLogin" style="display:none;">
+      <form id="studentForm">
+        <h2>Student Login</h2>
+        <label>Email</label>
+        <input type="email" id="studentEmail" required>
+        <label>Password</label>
+        <input type="password" id="studentPass" required>
+        <button type="submit" class="login-btn">Login</button>
+        Don't have an account? <a href="student.html" onclick="showSignup()">Signup</a>
+
+        <!-- <div class="bottom-text">Don't have an account? <a href="student.html">Signup</a></div> -->
+        <!-- <button type="button" class="btn" style="background:#6c757d;margin-top:15px;" onclick="backToRoles()">← Back</button> -->
+      </form>
+    </div>
+
+    <!-- PARENT LOGIN -->
+    <div class="container" id="parentLogin" style="display:none;">
+      <form id="parentForm">
+        <h2>Parent Login</h2>
+        <label>Email</label>
+        <input type="email" id="parentEmail" required>
+        <label>Password</label>
+        <input type="password" id="parentPass" required>
+        <button type="submit" class="login-btn">Login</button>
+        Don't have an account? <a href="parent.html" onclick="showSignup()">Signup</a>
+        <!-- <button type="button" class="btn" style="background:#6c757d;margin-top:15px;" onclick="backToRoles()">← Back</button> -->
+      </form>
+    </div>
+
+    <!-- ADVISOR LOGIN -->
+    <div class="container" id="advisorLogin" style="display:none;">
+      <form id="advisorForm">
+        <h2>Advisor Login</h2>
+        <label>Email</label>
+        <input type="email" id="advisorEmail" required>
+        <label>Password</label>
+        <input type="password" id="advisorPass" required>
+        <button type="submit" class="login-btn">Login</button>
+        Don't have an account? <a href="advisorsignin.html" onclick="showSignup()">Signup</a>
+        <!-- <button type="button" class="btn" style="background:#6c757d;margin-top:15px;" onclick="backToRoles()">← Back</button> -->
+      </form>
+    </div>
+
+    <!-- HOD LOGIN -->
+    <div class="container" id="hodLogin" style="display:none;">
+      <form id="hodForm">
+        <h2>HOD Login</h2>
+        <label>Email</label>
+        <input type="email" id="hodEmail" required>
+        <label>Password</label>
+        <input type="password" id="hodPass" required>
+        <button type="submit" class="login-btn">Login</button>
+        Don't have an account? <a href="hod.html" onclick="showSignup()">Signup</a> 
+        <!-- <button type="button" class="btn" style="background:#6c757d;margin-top:15px;" onclick="backToRoles()">← Back</button> -->
+      </form>
+    </div>
+
+    <!-- WARDEN LOGIN -->
+    <div class="container" id="wardenLogin" style="display:none;">
+      <form id="wardenForm">
+        <h2>Warden Login</h2>
+        <label>Email</label>
+        <input type="email" id="wardenEmail" required>
+        <label>Password</label>
+        <input type="password" id="wardenPass" required>
+        <button type="submit" class="login-btn">Login</button>
+        Don't have an account? <a href="warden.html" onclick="showSignup()">Signup</a>
+        <!-- <button type="button" class="btn" style="background:#6c757d;margin-top:15px;" onclick="backToRoles()">← Back</button> -->
+      </form>
+    </div>
+    <!-- ADMIN LOGIN -->
+<div class="container" id="adminLogin" style="display:none;">
+  <form id="adminForm">
+    <h2>Admin Login</h2>
+    <label>Email</label>
+    <input type="email" id="adminEmail" required>
+    <label>Password</label>
+    <input type="password" id="adminPass" required>
+    <button type="submit" class="login-btn">Login</button>
+    <div class="bottom-text">Only Authorized Personnel</div>
+  </form>
+</div>
+
+
+    <footer>© 2025 Smartpass | All Rights Reserved</footer>
+  </div>
+
+ <!-- ========== SCRIPT SECTION ========== -->
+<script>
+  // PAGE NAVIGATION
+  function showRoles() {
+    hideAll();
+    document.getElementById('roleCard').style.display = 'block';
+  }
+
+  function backToMain() {
+    hideAll();
+    document.getElementById('mainCard').style.display = 'block';
+  }
+
+  function backToRoles() {
+    hideAll();
+    document.getElementById('roleCard').style.display = 'block';
+  }
+
+  function showLogin(id) {
+    hideAll();
+    document.getElementById(id).style.display = 'block';
+  }
+
+  function hideAll() {
+    const sections = document.querySelectorAll('.role-card, .container');
+    sections.forEach(s => s.style.display = 'none');
+  }
+
+  // Auto open login form after signup
+  window.onload = function () {
+    const params = new URLSearchParams(window.location.search);
+    const role = params.get("role");
+    if (!role) return;
+
+    hideAll();
+
+    if (role === "student") document.getElementById("studentLogin").style.display = "block";
+    if (role === "parent") document.getElementById("parentLogin").style.display = "block";
+    if (role === "advisor") document.getElementById("advisorLogin").style.display = "block";
+    if (role === "hod") document.getElementById("hodLogin").style.display = "block";
+    if (role === "warden") document.getElementById("wardenLogin").style.display = "block";
+  };
+
+  // ===== LOCALSTORAGE LOGIN (other roles) =====
+
+
+  document.getElementById("adminForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const email = document.getElementById("adminEmail").value.trim();
+    const password = document.getElementById("adminPass").value.trim();
+    if (email === "admin@srishakthi.ac.in" && password === "Admin@1211") {
+      alert("Admin Login Successful!");
+      window.location.href = "admindash.html";
+    } else {
+      alert("Invalid Admin Email or Password!");
+    }
+  });
+</script>
+
+<!-- ========== FIREBASE LOGIN (MODULE SCRIPT) ========== -->
+<script type="module">
+  import { auth, db } from "./firebase/config.js";
+  import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+  import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+  // ===============================
+  // 🔹 STUDENT LOGIN
+  // ===============================
+  document.getElementById("studentForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("studentEmail").value.trim().toLowerCase();
+    const password = document.getElementById("studentPass").value.trim();
+
+    try {
+      const userCred = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCred.user;
+
+      const docRef = doc(db, "students", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const student = docSnap.data();
+        localStorage.setItem("loggedInUser", JSON.stringify(student));
+        alert("✅ Student Login Successful!");
+        window.location.href = "new.html";
+      } else {
+        alert("⚠️ No student record found in Firestore.");
+      }
+    } catch (err) {
+      alert("❌ Student Login Failed: " + err.message);
+    }
+  });
+
+  // ===============================
+  // 🔹 PARENT LOGIN
+  // ===============================
+  document.getElementById("parentForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("parentEmail").value.trim().toLowerCase();
+    const password = document.getElementById("parentPass").value.trim();
+
+    try {
+      const userCred = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCred.user;
+
+      const docRef = doc(db, "parents", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const parent = docSnap.data();
+        localStorage.setItem("loggedInUser", JSON.stringify(parent));
+        alert("✅ Parent Login Successful!");
+        window.location.href = "parentdash.html";
+      } else {
+        alert("⚠️ No parent record found in Firestore.");
+      }
+    } catch (err) {
+      alert("❌ Parent Login Failed: " + err.message);
+    }
+  });
+
+  // ===============================
+  // 🔹 ADVISOR LOGIN
+  // ===============================
+  document.getElementById("advisorForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("advisorEmail").value.trim().toLowerCase();
+    const password = document.getElementById("advisorPass").value.trim();
+
+    try {
+      const userCred = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCred.user;
+
+      const docRef = doc(db, "advisors", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const advisor = docSnap.data();
+        localStorage.setItem("loggedInUser", JSON.stringify(advisor));
+        alert("✅ Advisor Login Successful!");
+        window.location.href = "advisor.html";
+      } else {
+        alert("⚠️ No advisor record found in Firestore.");
+      }
+    } catch (err) {
+      alert("❌ Advisor Login Failed: " + err.message);
+    }
+  });
+
+  // ===============================
+  // 🔹 HOD LOGIN
+  // ===============================
+  document.getElementById("hodForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("hodEmail").value.trim().toLowerCase();
+    const password = document.getElementById("hodPass").value.trim();
+
+    try {
+      const userCred = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCred.user;
+
+      const docRef = doc(db, "hods", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const hod = docSnap.data();
+        localStorage.setItem("loggedInUser", JSON.stringify(hod));
+        alert("✅ HOD Login Successful!");
+        window.location.href = "hoddhash.html";
+      } else {
+        alert("⚠️ No HOD record found in Firestore.");
+      }
+    } catch (err) {
+      alert("❌ HOD Login Failed: " + err.message);
+    }
+  });
+
+  // ===============================
+  // 🔹 WARDEN LOGIN (NEW)
+  // ===============================
+  document.getElementById("wardenForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("wardenEmail").value.trim().toLowerCase();
+    const password = document.getElementById("wardenPass").value.trim();
+
+    try {
+      // Sign in the warden with Firebase Auth
+      const userCred = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCred.user;
+
+      // Fetch warden data from Firestore
+      const docRef = doc(db, "wardens", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const warden = docSnap.data();
+        localStorage.setItem("loggedInUser", JSON.stringify(warden));
+        alert("✅ Warden Login Successful!");
+        window.location.href = "wardendash.html";
+      } else {
+        alert("⚠️ No Warden record found in Firestore. Please contact admin.");
+      }
+    } catch (err) {
+      alert("❌ Warden Login Failed: " + err.message);
+    }
+  });
+
+  // ===============================
+  // 🔹 FIREBASE AUTH END
+  // ===============================
+</script>
+
+
+
+
+</body>
+</html>

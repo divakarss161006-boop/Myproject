@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hostel Leave Request</title>
+    <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: #244828;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .main-container {
+      width: 900px;
+      max-width: 100%;
+      background-color: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      flex-wrap: wrap;
+    }
+
+    .left-panel {
+      width: 40%;
+      background: #c7eab1;
+      color: white;
+      padding: 40px 25px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+
+    .left-panel h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+      color: #24582e;
+    }
+
+    .student-info {
+      background: rgba(153, 54, 11, 0.1);
+      border-radius: 8px;
+      padding: 20px;
+      color: #1c472b;
+      line-height: 1.8;
+      font-size: 15px;
+      word-wrap: break-word;
+    }
+
+    .right-panel {
+      width: 60%;
+      padding: 40px 30px;
+      background: #c7d36c;
+      box-sizing: border-box;
+    }
+
+    .right-panel h2 {
+      text-align: center;
+      color: #1d3557;
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: 500;
+      color: #333;
+    }
+
+    select, input, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 15px;
+      margin-top: 5px;
+      box-sizing: border-box;
+    }
+
+    input[type="datetime-local"] {
+      font-family: "Poppins", sans-serif;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .checkbox-group input {
+      width: auto;
+      margin-right: 10px;
+    }
+
+    #sessionContainer { display: none; }
+
+    .submit-btn {
+      width: 100%;
+      margin-top: 20px;
+      padding: 12px;
+      border: none;
+      background-color: #1e5f2c;
+      color: #fff;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .submit-btn:hover { background-color: #8b8f1b; }
+
+    .top-bar { text-align: right; margin-top: 10px; }
+
+    .my-requests-btn {
+      background-color: #1d3557;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .my-requests-btn:hover { background-color: #16324f; }
+
+    /* ✅ Responsive fix for tablets and phones */
+    @media (max-width: 1024px) {
+      .main-container {
+        flex-direction: column;
+        width: 100%;
+        max-width: 600px;
+      }
+
+      .left-panel, .right-panel {
+        width: 100%;
+        padding: 25px 20px;
+      }
+
+      .left-panel {
+        text-align: center;
+      }
+    }
+
+    /* ✅ Extra mobile optimization */
+    @media (max-width: 600px) {
+      body {
+        align-items: flex-start;
+        padding: 15px;
+      }
+
+      .main-container {
+        width: 100%;
+        box-shadow: none;
+      }
+
+      .left-panel, .right-panel {
+        padding: 20px;
+      }
+
+      .left-panel h2, .right-panel h2 {
+        font-size: 18px;
+      }
+
+      .submit-btn {
+        padding: 10px;
+        font-size: 15px;
+      }
+
+      .my-requests-btn {
+        width: 100%;
+        text-align: center;
+        margin-top: 10px;
+      }
+
+      select, input, textarea {
+        font-size: 14px;
+        padding: 8px;
+      }
+
+      .student-info {
+        font-size: 14px;
+      }
+    }
+  </style>
+
+</head>
+<body>
+  <div class="main-container">
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+      <h2>Student Details</h2>
+      <div class="student-info" id="studentInfo">
+        <strong>Loading student details...</strong>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+      <h2>Hostel Leave Request</h2>
+
+      <form id="leaveForm">
+        <label for="leaveType">Leave Type <span style="color:red">*</span></label>
+        <select id="leaveType" required>
+          <option value="">Select Leave Type</option>
+          <option>Study Holiday</option>
+          <option>Semester Holiday</option>
+          <option>Onduty</option>
+          <option>Industrial Visit</option>
+          <option>Common Hostel Holiday</option>
+          <option>Personal Leave</option>
+          <option>Testing</option>
+          <option>Outing Permission - I Year</option>
+          <option>Outing Permission - II Year</option>
+          <option>Outing Permission - III Year</option>
+          <option>Outing Permission - IV Year</option>
+        </select>
+
+        <label for="communication">Parent Communication</label>
+        <select id="communication">
+          <option value="">Select Communication Mode</option>
+          <option>WhatsApp</option>
+          <option>Phone Call</option>
+          <option>In-Person</option>
+        </select>
+
+        <label for="approval">Approval From</label>
+        <select id="approval">
+          <option value="">Select Approval</option>
+          <option>Father</option>
+          <option>Mother</option>
+          <option>Guardian</option>
+        </select>
+        <p id="mobileNumber" style="color:#1d3557;font-weight:500;"></p>
+
+        <label for="fromDate">Out Date & Time <span style="color:red">*</span></label>
+        <input type="datetime-local" id="fromDate" required>
+
+        <label for="toDate">In Date & Time <span style="color:red">*</span></label>
+        <input type="datetime-local" id="toDate" required>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="halfday">
+          <label for="halfday" style="margin:0;">Is Halfday?</label>
+        </div>
+
+        <div id="sessionContainer">
+          <label for="session">Session</label>
+          <select id="session">
+            <option value="">Select Session</option>
+            <option>Morning</option>
+            <option>Afternoon</option>
+          </select>
+        </div>
+
+        <label for="reason">Reason <span style="color:red">*</span></label>
+        <textarea id="reason" rows="3" required placeholder="Reason for leave..."></textarea>
+
+        <button type="submit" class="submit-btn">Submit Request</button>
+      </form>
+
+      <div class="top-bar">
+        <button class="my-requests-btn" onclick="window.location.href='myreq.html'">📄 My Requests</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ FIXED SCRIPT -->
+  <script type="module">
+import { auth, db } from "./firebase/Config.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+    const studentInfo = document.getElementById("studentInfo");
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          console.log("User UID:", user.uid);
+          const docRef = doc(db, "students", user.uid);
+          const docSnap = await getDoc(docRef);
+
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            localStorage.setItem("studentData", JSON.stringify(data));
+
+            studentInfo.innerHTML = `
+              <strong>Student Name: ${data.name}</strong><br>
+              Roll No: ${data.roll}<br>
+              Department: ${data.dept}<br>
+              Year: ${data.year}<br>
+              Hostel/Room: ${data.hostel}<br>
+              Email: ${data.email || "N/A"}
+            `;
+          } else {
+            studentInfo.innerHTML = `<span style="color:#f55;">Student record not found in Firestore.</span>`;
+          }
+        } catch (error) {
+          console.error("Error fetching student:", error);
+          studentInfo.innerHTML = `<span style="color:#f55;">Error loading student info.</span>`;
+        }
+      } else {
+        studentInfo.innerHTML = `<span style="color:#f55;">Please log in again.</span>`;
+        setTimeout(() => (window.location.href = "user.html?role=student"), 2000);
+      }
+    });
+
+    // Show/hide session field
+    document.getElementById("halfday").addEventListener("change", function () {
+      document.getElementById("sessionContainer").style.display = this.checked ? "block" : "none";
+    });
+
+    // Show parent/guardian mobile number
+    document.getElementById("approval").addEventListener("change", function () {
+      const selected = this.value;
+      const mobile = document.getElementById("mobileNumber");
+      const student = JSON.parse(localStorage.getItem("studentData"));
+
+      if (selected === "Father") {
+        mobile.textContent = `Father's Mobile: ${student?.fatherMobile || 'Not Provided'}`;
+      } else if (selected === "Mother") {
+        mobile.textContent = `Mother's Mobile: ${student?.motherMobile || 'Not Provided'}`;
+      } else if (selected === "Guardian") {
+        mobile.textContent = `Guardian's Mobile: ${student?.guardianMobile || 'Not Provided'}`;
+      } else {
+        mobile.textContent = "";
+      }
+    });
+
+    // Submit form
+    document.getElementById("leaveForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const student = JSON.parse(localStorage.getItem("studentData"));
+      if (!student) return alert("Student info not loaded!");
+
+      const leaveType = document.getElementById("leaveType").value;
+      const fromDate = new Date(document.getElementById("fromDate").value);
+      const toDate = new Date(document.getElementById("toDate").value);
+      const reason = document.getElementById("reason").value.trim();
+
+      if (!leaveType) return alert("Please select a Leave Type.");
+      if (fromDate >= toDate) return alert("'To Date' must be after 'From Date'.");
+      if (!reason) return alert("Please provide a reason for leave.");
+
+      const leaveRequests = JSON.parse(localStorage.getItem("sp_requests_v3") || "[]");
+      leaveRequests.push({
+        id: Date.now().toString(),
+        name: student.name,
+        roll: student.roll,
+        dept: student.dept,
+        year: student.year,
+        hostel: student.hostel,
+        studentEmail: student.email,
+        leaveType,
+        communication: document.getElementById("communication").value,
+        approval: document.getElementById("approval").value,
+        fromDate: fromDate.toLocaleString(),
+        toDate: toDate.toLocaleString(),
+        halfday: document.getElementById("halfday").checked,
+        session: document.getElementById("session").value,
+        reason,
+        status: "pending",
+        stageIndex: 0
+      });
+
+      localStorage.setItem("sp_requests_v3", JSON.stringify(leaveRequests));
+      alert("Hostel Leave Request Submitted Successfully!");
+      window.location.href = "myreq.html";
+    });
+  </script>
+</body>
+</html>

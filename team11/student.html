@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Student Signup – Smart Outpass System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(100deg, #215429, #215320);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  .container {
+    background: #fff;
+    padding: 25px 30px;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    text-align: center;
+  }
+  h2 { margin-bottom: 15px; color:#333; }
+  input, select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+  }
+  button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 6px;
+    background: #3498db;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  button:hover { opacity: 0.9; }
+  .error { color: red; font-size: 13px; margin-top: 4px; }
+  p { font-size: 14px; }
+  a { color: #3498db; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Student Signup</h2>
+
+  <input type="text" id="name" placeholder="Full Name" />
+  <input type="text" id="roll" placeholder="Roll Number" />
+  <input type="text" id="dept" placeholder="Department" />
+
+  <select id="year">
+      <option value="">Select Year</option>
+      <option>1st Year</option>
+      <option>2nd Year</option>
+      <option>3rd Year</option>
+      <option>4th Year</option>
+  </select>
+
+  <input type="text" id="hostel" placeholder="Select Hostel/Room" />
+  <input type="email" id="email" placeholder="College Email (@srishakthi.ac.in)" />
+  <input type="password" id="password" placeholder="Strong Password (min 8 chars)" />
+
+  <div class="error" id="msg"></div>
+  <button onclick="signup()">Create Account</button>
+  <p>Already have an account? <a href="user.html?role=student">Login</a></p>
+</div>
+<script type="module" src="./studentsignup.js"></script>
+
+<script type="module">
+import { auth, db } from "./firebase/Config.js";
+import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+const ALLOWED_DOMAIN = '@srishakthi.ac.in';
+const STRONG_PW_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+window.signup = async function () {
+  const name = document.getElementById("name").value.trim();
+  const roll = document.getElementById("roll").value.trim();
+  const dept = document.getElementById("dept").value.trim();
+  const year = document.getElementById("year").value.trim();
+  const hostel = document.getElementById("hostel").value.trim();
+  const email = document.getElementById("email").value.trim().toLowerCase();
+  const password = document.getElementById("password").value.trim();
+  const msg = document.getElementById("msg");
+
+  msg.style.color = "red";
+
+  if (!name || !roll || !dept || !year || !hostel || !email || !password)
+    return msg.textContent = "Please fill all fields.";
+
+  if (!email.endsWith(ALLOWED_DOMAIN))
+    return msg.textContent = "Use official college email (@srishakthi.ac.in).";
+
+  if (!STRONG_PW_REGEX.test(password))
+    return msg.textContent = "Password must include uppercase, lowercase, number & symbol (min 8 chars).";
+
+  try {
+    // Create Firebase Auth User
+    const userCred = await createUserWithEmailAndPassword(auth, email, password);
+    const uid = userCred.user.uid;
+
+    // Save user data in Firestore (NO PHOTO)
+    await setDoc(doc(db, "students", uid), {
+      role: "student",
+      name,
+      roll,
+      dept,
+      year,
+      hostel,
+      email
+    });
+
+    msg.style.color = "green";
+    msg.textContent = "Account created! Redirecting to login...";
+    setTimeout(() => window.location.href = "user.html?role=student", 1500);
+
+  } catch (err) {
+    msg.textContent = err.message;
+  }
+};
+</script>
+
+</body>
+</html>

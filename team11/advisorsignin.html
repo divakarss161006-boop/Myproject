@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advisor Signup</title>
+  <style>
+    body {
+      background-color: #004b23;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Poppins, sans-serif;
+    }
+    .signup-box {
+      background: #fff;
+      width: 350px;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    h2 { color: #286749; margin-bottom: 20px; }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 12px;
+      border-radius: 8px;
+      border: 1px solid #bbb;
+      font-size: 15px;
+    }
+    button {
+      width: 100%;
+      background-color: #26d94f;
+      padding: 12px;
+      border: none;
+      margin-top: 18px;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 17px;
+      cursor: pointer;
+    }
+    button:hover { background-color: #1aaa3c; }
+    p { margin-top: 15px; }
+    a { color: #286749; text-decoration: none; }
+
+    .show-pass {
+      text-align: left;
+      margin-top: 8px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="signup-box">
+  <h2>Advisor Signup</h2>
+
+  <input type="text" id="name" placeholder="Full Name" required>
+  <input type="email" id="email" placeholder="Email" required>
+  <input type="password" id="password" placeholder="Password" required>
+  <input type="text" id="department" placeholder="Department" required>
+
+  <button id="signupBtn">Sign Up</button>
+
+  <p>Already have an account? <a href="user.html?role=advisor">Login</a></p>
+</div>
+
+<!-- ✅ Firebase Integration -->
+<script type="module">
+  // Import Firebase dependencies
+  import { auth, db } from "./firebase/config.js";
+  import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+  import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+  // Handle signup
+  document.getElementById("signupBtn").addEventListener("click", async () => {
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim().toLowerCase();
+    const password = document.getElementById("password").value;
+    const department = document.getElementById("department").value.trim();
+
+    if (!name || !email || !password || !department) {
+      alert("All fields are required!");
+      return;
+    }
+
+    // Strong password validation
+    const strongPass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!strongPass.test(password)) {
+      alert("Password must be at least 8 characters long and include:\n- Uppercase\n- Lowercase\n- Number\n- Special character (@$!%*?&)");
+      return;
+    }
+
+    try {
+      // ✅ Create Advisor in Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // ✅ Save Advisor Data in Firestore
+      await setDoc(doc(db, "advisors", user.uid), {
+        name: name,
+        email: email,
+        department: department,
+        role: "advisor",
+        createdAt: new Date()
+      });
+
+      alert("Advisor account created successfully!");
+      window.location.href = "user.html?role=advisor"; // redirect to advisor login
+    } catch (error) {
+      console.error("Error:", error);
+      if (error.code === "auth/email-already-in-use") {
+        alert("This email is already registered. Please login instead.");
+      } else if (error.code === "permission-denied") {
+        alert("Firestore permission denied. Check your Firestore rules.");
+      } else {
+        alert("Signup Failed: " + error.message);
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
